@@ -66,5 +66,13 @@ def post_detail(request, post_id):
 
 def category_posts(request, category_slug):
     template_name = 'blog/category.html'
-    context = {'category': category_slug}
+    filtered_posts = [
+        post for post in posts if post['category'] == category_slug
+    ]
+    if not filtered_posts:
+        raise Http404('Категория не найдена!')
+    context = {
+        'category': category_slug,
+        'posts': filtered_posts[::-1],
+    }
     return render(request, template_name, context)
